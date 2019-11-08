@@ -1,0 +1,79 @@
+﻿<!doctype html>
+<html>
+<head>
+    <link href="css/base.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="js/baiduTemplate.js"></script>
+</head>
+<body>
+
+<article class="blogs">
+    <h2 class="title_tj">
+    <p>文章<span>推荐</span></p>
+  </h2>
+    <!--模板-->
+    <div id="Template">
+    </div>
+</article>
+<footer>
+    <p class="ft-copyright">个人博客 Sunshine </p>
+    <div id="tbox"> <a id="togbook" href=""></a> <a id="gotop" href="javascript:void(0)"></a></div>
+</footer>
+</body>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+<script type="text/javascript">
+    window.onload = () =>{
+        var data;
+        $.ajax({
+            type:"POST",
+            contentType: "application/json;charset=UTF-8",
+            url : "/getCldate",
+            async:true,
+            success : function(result) {
+
+                data = JSON.parse(result);
+                console.log(data.length)
+                var datat = {
+                    "list":data
+                }
+                var bt = baidu.template;
+                var html = bt('abcd',datat);
+               document.getElementById('Template').innerHTML=html;
+            },
+            error : function(e){
+                console.log(e.status);
+                console.log(e.responseText);
+
+            }
+    })
+    }
+</script>
+<script id="abcd" type="text/html">
+    <div class="newblog left">
+        <%if(list.length>1){%>
+        <%for(var i=0;i<list.length;i++){%>
+        <div class="oneblog">
+            <h2><a title="路·过-喜欢在路上" href="/">路·过-喜欢在路上</a></h2>
+            <figure><img src=<%=list[i].imgPath%> border='0' width='120' height='120' alt='路·过-喜欢在路上'></figure>
+            <ul class="nlist">
+                <p style="overflow: hidden;height: 4em"><%=list[i].chapterContent%></p>
+                <a title="路·过-喜欢在路上" href="/detail?chapterId=<%=list[i].chapterId%>" target="_blank" class="readmore">阅读全文>></a>
+            </ul>
+            <p class="dateview">
+                <span>发布时间：<%=list[i].publishTimer%></span>
+                <span>作者：<%=list[i].author%></span>
+                <span>分类：[<a href="/">悠客</a>]</span>
+                <span class="nl">浏览（<%=list[i].views%>)</span>
+                <span class="n2">评论（<a href="/">0</a>）</span>
+            <div class="line"></div>
+            </p>
+        </div>
+        <%}%>
+        <%}else{%>
+        <h2>没有list数据</h2>
+        <%}%>
+
+    </div>
+</script>
+</html>
